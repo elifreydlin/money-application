@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eli The Money Guy — Business Funding Application</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Righteous&family=Hind:wght@400;600;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Poppins', 'Hind', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif; background: #020b05; color: #f0fdf4; line-height: 1.5; overflow-x: hidden; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 16px 60px; position: relative; z-index: 5; }
+
+  /* Vivid Neon Money Stage with Currency Canvas Background */
+  .stage-container { position: relative; width: 100%; height: 340px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at 50% 35%, #052e16 0%, #020d06 75%, #000401 100%); overflow: hidden; perspective: 1000px; border-bottom: 2px solid #22c55e; user-select: none; }
+
+  #currencyCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
+  .spotlight { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(650px circle at var(--light-x, 50%) var(--light-y, 35%), rgba(34, 197, 94, 0.25), transparent 80%); pointer-events: none; z-index: 2; }
+
+  .waves { position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; z-index: 3; pointer-events: none; }
+  .waves .w1 { animation: waveMove 10s linear infinite; }
+  .waves .w2 { animation: waveMove 16s linear infinite reverse; }
+  .waves .w3 { animation: waveMove 22s linear infinite; }
+  @keyframes waveMove { from { transform: translateX(0); } to { transform: translateX(-1440px); } }
+
+  .header-3d-wrapper { position: relative; z-index: 4; transform-style: preserve-3d; will-change: transform; text-align: center; cursor: grab; padding: 20px; }
+  .header-3d-wrapper:active { cursor: grabbing; }
+
+  .text-3d { font-family: 'Righteous', sans-serif; font-size: clamp(2.4rem, 8vw, 5.5rem); font-weight: 900; line-height: 1.1; letter-spacing: 2px; white-space: nowrap; display: inline-block; color: #00ff66; filter: drop-shadow(0 0 15px rgba(0,255,102,0.6)); }
+
+  .subtitle-3d { font-size: clamp(.95rem, 3vw, 1.35rem); font-weight: 800; letter-spacing: 4px; text-transform: uppercase; margin-top: 12px; color: #4ade80; text-shadow: 0 0 16px rgba(74, 222, 128, 0.9); transform: translateZ(40px); }
+
+  .lang-switch { margin-top: 20px; transform: translateZ(40px); display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .lang-switch button { background: rgba(2, 13, 6, .85); border: 1.5px solid #22c55e; color: #4ade80; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: .9rem; font-weight: 700; transition: all .2s; }
+  .lang-switch button:hover { border-color: #00ff66; color: #ffffff; box-shadow: 0 0 12px rgba(0, 255, 102, 0.4); }
+  .lang-switch button.active { background: #00ff66; color: #020d06; border-color: #00ff66; font-weight: 900; box-shadow: 0 0 16px rgba(0, 255, 102, 0.8); }
+
+  /* High Contrast Forms */
+  section { background: rgba(4, 24, 12, 0.88); border: 1.5px solid rgba(34, 197, 94, 0.4); backdrop-filter: blur(16px); border-radius: 14px; padding: 22px; margin-top: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); }
+  h2 { font-size: 1.08rem; color: #00ff66; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #22c55e; padding-bottom: 8px; margin-bottom: 16px; text-shadow: 0 0 10px rgba(0,255,102,0.4); }
+  label { display: block; font-size: .9rem; font-weight: 700; margin: 14px 0 6px; color: #bbf7d0; }
+  label .opt { font-weight: 400; color: #86efac; font-size: .82rem; }
+  input[type=text], input[type=tel], input[type=email], input[type=number], input[type=date], input[type=file], select, textarea { width: 100%; padding: 12px 14px; background: #051a0e; border: 1.5px solid #15803d; border-radius: 8px; color: #ffffff; font-size: 1rem; font-weight: 600; outline: none; transition: all .2s; }
+  input:focus, select:focus { border-color: #00ff66; background: #092c18; box-shadow: 0 0 12px rgba(0, 255, 102, 0.3); }
+  input[type=file] { padding: 9px 12px; }
+  input::file-selector-button { background: #166534; color: #ffffff; border: none; border-radius: 6px; padding: 8px 14px; margin-right: 12px; cursor: pointer; font-family: inherit; font-weight: 700; }
+  select option { background: #051a0e; color: #ffffff; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .row > div { flex: 1; min-width: 130px; }
+  .inline { display: flex; align-items: center; gap: 8px; }
+  .inline input[type=number] { flex: 1; }
+  .inline .per { white-space: nowrap; font-size: .95rem; color: #4ade80; font-weight: 700; }
+  .radios { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 4px; }
+  .radios label { display: flex; align-items: center; gap: 6px; font-weight: 600; margin: 0; color: #dcfce7; }
+  input[type=radio], input[type=checkbox] { width: 18px; height: 18px; accent-color: #00ff66; }
+  .note { font-size: .82rem; color: #86efac; margin-top: 4px; }
+  .hidden { display: none !important; }
+  button.submit { width: 100%; margin-top: 24px; padding: 18px; background: linear-gradient(135deg, #00ff66, #16a34a); color: #011408; border: none; border-radius: 10px; font-size: 1.15rem; font-weight: 900; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 25px rgba(0, 255, 102, .5); transition: transform .1s, box-shadow .2s; }
+  button.submit:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0, 255, 102, .7); }
+  button.submit:disabled { opacity: .6; transform: none; }
+  #success { background: linear-gradient(135deg, #00ff66, #16a34a); border: 2px solid #00ff66; color: #011408; font-weight: 800; border-radius: 12px; padding: 22px; margin-top: 18px; text-align: center; font-size: 1.1rem; }
+  .req { color: #00ff66; }
+  footer { text-align: center; color: #86efac; font-size: .82rem; margin-top: 28px; }
+  .mini-btn { width: 100%; margin-top: 12px; padding: 12px; background: rgba(0, 255, 102, 0.05); border: 1.5px dashed #22c55e; color: #00ff66; border-radius: 8px; cursor: pointer; font-size: .92rem; font-weight: 700; transition: all .2s; }
+  .mini-btn:hover { border-color: #00ff66; background: rgba(0, 255, 102, 0.15); color: #ffffff; }
+  .mini-btn:disabled { opacity: .4; cursor: default; }
+  .removeOwner { float: right; background: none; border: 1px solid #22c55e; color: #4ade80; border-radius: 6px; padding: 2px 8px; font-size: .78rem; cursor: pointer; }
+  .removeOwner:hover { border-color: #00ff66; color: #fff; background: #166534; }
+  .owner-block { margin-top: 18px; border-top: 1.5px solid rgba(34, 197, 94, .3); padding-top: 14px; }
+</style>
+</head>
+<body>
+
+<div class="stage-container" id="stage">
+  <canvas id="currencyCanvas"></canvas>
+  <div class="spotlight" id="spotlight"></div>
+  <div class="header-3d-wrapper" id="wrapper">
+    <div class="text-3d" id="text3D">Eli The Money Guy</div>
+    <div class="subtitle-3d" id="subtitle3D" data-en="Business Funding Application" data-hi="व्यावसायिक वित्तपोषण आवेदन" data-fr="Demande de financement d'entreprise" data-de="Antrag auf Unternehmensfinanzierung" data-zh="企业融资申请" data-ru="Заявка на финансирование бизнеса" data-es="Solicitud de financiamiento">Business Funding Application</div>
+    <div class="lang-switch">
+      <button type="button" id="btn-en" class="active" onclick="setLang('en')">🇺🇸 EN</button>
+      <button type="button" id="btn-es" onclick="setLang('es')">🇪🇸 ES</button>
+      <button type="button" id="btn-ru" onclick="setLang('ru')">🇷🇺 РУС</button>
+      <button type="button" id="btn-fr" onclick="setLang('fr')">🇫🇷 FR</button>
+      <button type="button" id="btn-de" onclick="setLang('de')">🇩🇪 DE</button>
+      <button type="button" id="btn-zh" onclick="setLang('zh')">🇨🇳 中文</button>
+      <button type="button" id="btn-hi" onclick="setLang('hi')">🇮🇳 हिं</button>
+    </div>
+  </div>
+  <svg class="waves" viewBox="0 0 2880 140" preserveAspectRatio="none" aria-hidden="true">
+    <g class="w3" fill="#00ff66" opacity="0.1">
+      <path d="M0,40 C240,70 480,10 720,40 C960,70 1200,10 1440,40 C1680,70 1920,10 2160,40 C2400,70 2640,10 2880,40 L2880,140 L0,140 Z"></path>
+    </g>
+    <g class="w2" fill="#22c55e" opacity="0.2">
+      <path d="M0,70 C240,100 480,40 720,70 C960,100 1200,40 1440,70 C1680,100 1920,40 2160,70 C2400,100 2640,40 2880,70 L2880,140 L0,140 Z"></path>
+    </g>
+    <g class="w1" fill="#020b05" opacity="0.95">
+      <path d="M0,100 C240,120 480,80 720,100 C960,120 1200,80 1440,100 C1680,120 1920,80 2160,100 C2400,120 2640,80 2880,100 L2880,140 L0,140 Z"></path>
+    </g>
+  </svg>
+</div>
+
+<div class="wrap">
+
+<form id="appForm" novalidate="false">
+
+  <input type="hidden" name="access_key" value="f58ac341-94e3-4801-9eb5-89f9721a510e">
+  <input type="hidden" name="subject" value="New MCA Application - Eli The Money Guy">
+  <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off">
+
+  <!-- SECTION 1: BASIC DETAILS -->
+  <section>
+    <h2 data-en="Basic Details" data-hi="बुनियादी विवरण" data-fr="Informations de base" data-de="Grundinformationen" data-zh="基本信息" data-ru="Основная информация" data-es="Información básica">Información básica</h2>
+    <div class="row">
+      <div><label data-en="First name" data-hi="पहला नाम" data-fr="Prénom" data-de="Vorname" data-zh="名" data-ru="Имя" data-es="Nombre">Nombre</label><input type="text" name="first_name" required></div>
+      <div><label data-en="Last name" data-hi="उपनाम" data-fr="Nom de famille" data-de="Nachname" data-zh="姓" data-ru="Фамилия" data-es="Apellido">Apellido</label><input type="text" name="last_name" required></div>
+    </div>
+    <div class="row">
+      <div><label data-en="Phone" data-hi="फ़ोन" data-fr="Téléphone" data-de="Telefon" data-zh="电话" data-ru="Телефон" data-es="Teléfono">Teléfono</label><input type="tel" name="phone" required></div>
+      <div><label data-en="Email" data-hi="ईमेल" data-fr="E-mail" data-de="E-Mail" data-zh="电子邮箱" data-ru="Электронная почта" data-es="Correo electrónico">Correo electrónico</label><input type="email" name="email" required></div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: FINANCIALS -->
+  <section>
+    <h2 data-en="Financials" data-hi="वित्तीय विवरण" data-fr="Données financières" data-de="Finanzdaten" data-zh="财务信息" data-ru="Финансы" data-es="Datos financieros">Datos financieros</h2>
+    <label data-en="Estimated credit score <span class='req'>*</span>" data-hi="अनुमानित क्रेडिट स्कोर <span class='req'>*</span>" data-fr="Score de crédit estimé <span class='req'>*</span>" data-de="Geschätzter Kreditscore <span class='req'>*</span>" data-zh="预估信用评分 <span class='req'>*</span>" data-ru="Примерный кредитный рейтинг <span class='req'>*</span>" data-es="Puntaje de crédito estimado <span class='req'>*</span>">Puntaje de crédito estimado <span class="req">*</span></label>
+    <select name="credit_score" required>
+      <option value=""></option>
+      <option value="Below 500" data-en="Below 500" data-hi="500 से कम" data-fr="Moins de 500" data-de="Unter 500" data-zh="500以下" data-ru="Ниже 500" data-es="Menos de 500">Menos de 500</option>
+      <option value="500-550">500–550</option>
+      <option value="550-600">550–600</option>
+      <option value="600-650">600–650</option>
+      <option value="650-700">650–700</option>
+      <option value="Above 700" data-en="Above 700" data-hi="700 से ऊपर" data-fr="Plus de 700" data-de="Über 700" data-zh="700以上" data-ru="Выше 700" data-es="Más de 700">Más de 700</option>
+      <option value="Not sure" data-en="Not sure" data-hi="पता नहीं" data-fr="Pas sûr" data-de="Nicht sicher" data-zh="不确定" data-ru="Не знаю" data-es="No estoy seguro">No estoy seguro</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label data-en="Amount requested ($) <span class='req'>*</span>" data-hi="अनुरोधित राशि ($) <span class='req'>*</span>" data-fr="Montant demandé ($) <span class='req'>*</span>" data-de="Beantragter Betrag ($) <span class='req'>*</span>" data-zh="申请金额 ($) <span class='req'>*</span>" data-ru="Запрашиваемая сумма ($) <span class='req'>*</span>" data-es="Monto solicitado ($) <span class='req'>*</span>">Monto solicitado ($) <span class="req">*</span></label>
+        <div class="inline"><span class="per">$</span><input type="number" name="amount_requested" min="5000" required></div>
+      </div>
+      <div>
+        <label data-en="Average monthly revenue <span class='req'>*</span>" data-hi="औसत मासिक राजस्व <span class='req'>*</span>" data-fr="Revenu mensuel moyen <span class='req'>*</span>" data-de="Durchschnittlicher Monatsumsatz <span class='req'>*</span>" data-zh="平均月收入 <span class='req'>*</span>" data-ru="Средний доход в месяц <span class='req'>*</span>" data-es="Ingresos mensuales promedio <span class='req'>*</span>">Ingresos mensuales promedio <span class="req">*</span></label>
+        <div class="inline"><span class="per">$</span><input type="number" name="avg_monthly_revenue" min="0" required></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: COMPANY -->
+  <section>
+    <h2 data-en="Company" data-hi="कंपनी" data-fr="Entreprise" data-de="Unternehmen" data-zh="公司" data-ru="Компания" data-es="Empresa">Empresa</h2>
+    <div class="row">
+      <div style="flex:2;"><label data-en="Company name <span class='req'>*</span>" data-hi="कंपनी का नाम <span class='req'>*</span>" data-fr="Nom de l'entreprise <span class='req'>*</span>" data-de="Firmenname <span class='req'>*</span>" data-zh="公司名称 <span class='req'>*</span>" data-ru="Название компании <span class='req'>*</span>" data-es="Nombre de la empresa <span class='req'>*</span>">Nombre de la empresa <span class="req">*</span></label><input type="text" name="company_name" required></div>
+      <div><label data-en="Tax ID (EIN) <span class='req'>*</span>" data-hi="कर पहचान संख्या (EIN) <span class='req'>*</span>" data-fr="Numéro fiscal (EIN) <span class='req'>*</span>" data-de="Steuernummer (EIN) <span class='req'>*</span>" data-zh="税号 (EIN) <span class='req'>*</span>" data-ru="Налоговый номер (EIN) <span class='req'>*</span>" data-es="Número fiscal (EIN) <span class='req'>*</span>">Número fiscal (EIN) <span class="req">*</span></label><input type="text" name="tax_id" required></div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label data-en="Company type <span class='req'>*</span>" data-hi="कंपनी का प्रकार <span class='req'>*</span>" data-fr="Type d'entreprise <span class='req'>*</span>" data-de="Unternehmensform <span class='req'>*</span>" data-zh="公司类型 <span class='req'>*</span>" data-ru="Тип компании <span class='req'>*</span>" data-es="Tipo de empresa <span class='req'>*</span>">Tipo de empresa <span class="req">*</span></label>
+        <select name="company_type" required>
+          <option value=""></option>
+          <option value="LLC">LLC</option>
+          <option value="S-Corp">S-Corp</option>
+          <option value="C-Corp">C-Corp</option>
+          <option value="Sole Proprietorship" data-en="Sole Proprietorship" data-hi="एकल व्यवसाय" data-fr="Entreprise individuelle" data-de="Einzelunternehmen" data-zh="个体经营" data-ru="Индивидуальный предприниматель" data-es="Propietario único">Propietario único</option>
+          <option value="Partnership" data-en="Partnership" data-hi="साझेदारी" data-fr="Partenariat" data-de="Partnerschaft" data-zh="合伙企业" data-ru="Партнёрство" data-es="Sociedad">Sociedad</option>
+          <option value="Estate" data-en="Estate" data-hi="विरासत" data-fr="Succession" data-de="Nachlass" data-zh="遗产" data-ru="Наследство" data-es="Herencia">Herencia</option>
+          <option value="Other" data-en="Other" data-hi="अन्य" data-fr="Autre" data-de="Sonstige" data-zh="其他" data-ru="Другое" data-es="Otro">Otro</option>
+        </select>
+      </div>
+      <div><label data-en="Industry <span class='req'>*</span>" data-hi="उद्योग <span class='req'>*</span>" data-fr="Secteur d'activité <span class='req'>*</span>" data-de="Branche <span class='req'>*</span>" data-zh="行业 <span class='req'>*</span>" data-ru="Отрасль <span class='req'>*</span>" data-es="Industria <span class='req'>*</span>">Industria <span class="req">*</span></label><input type="text" name="industry" required></div>
+    </div>
+
+    <label data-en="Physical address <span class='req'>*</span>" data-hi="वास्तविक पता <span class='req'>*</span>" data-fr="Adresse physique <span class='req'>*</span>" data-de="Geschäftsadresse <span class='req'>*</span>" data-zh="实际地址 <span class='req'>*</span>" data-ru="Физический адрес <span class='req'>*</span>" data-es="Dirección física <span class='req'>*</span>">Dirección física <span class="req">*</span></label>
+    <input type="text" name="business_address" required>
+
+    <label data-en="Time in business <span class='req'>*</span>" data-hi="व्यवसाय में समय <span class='req'>*</span>" data-fr="Ancienneté de l'entreprise <span class='req'>*</span>" data-de="Geschäftstätigkeit seit <span class='req'>*</span>" data-zh="经营时间 <span class='req'>*</span>" data-ru="Время в бизнесе <span class='req'>*</span>" data-es="Tiempo en el negocio <span class='req'>*</span>">Tiempo en el negocio <span class="req">*</span></label>
+    <div class="row">
+      <div class="inline"><input type="number" name="biz_years" min="0" required> <span class="per" data-en="years" data-hi="वर्ष" data-fr="ans" data-de="Jahre" data-zh="年" data-ru="лет" data-es="años">años</span></div>
+      <div class="inline"><input type="number" name="biz_months" min="0" max="11" required> <span class="per" data-en="months" data-hi="महीने" data-fr="mois" data-de="Monate" data-zh="个月" data-ru="мес." data-es="meses">meses</span></div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: OWNERS -->
+  <section>
+    <h2 data-en="Owners" data-hi="मालिक" data-fr="Propriétaires" data-de="Eigentümer" data-zh="业主信息" data-ru="Владельцы" data-es="Propietarios">Propietarios</h2>
+
+    <div id="ownersContainer">
+      <div class="owner-block" style="margin-top:0; border-top:none; padding-top:0;">
+        <label style="margin-top:6px;"><span data-en="Owner" data-hi="मालिक" data-fr="Propriétaire" data-de="Eigentümer" data-zh="业主" data-ru="Владелец" data-es="Propietario">Propietario</span> <span class="ownerNum">1</span></label>
+        <div class="row">
+          <div><label data-en="Full name" data-hi="पूरा नाम" data-fr="Nom complet" data-de="Vollständiger Name" data-zh="全名" data-ru="Имя полностью" data-es="Nombre completo">Nombre completo</label><input type="text" name="o1_name" required></div>
+          <div><label data-en="Ownership %" data-hi="स्वामित्व %" data-fr="% de propriété" data-de="Eigentumsanteil %" data-zh="所有权 %" data-ru="Доля %" data-es="% de propiedad">% de propiedad</label><input type="number" name="o1_pct" min="1" max="100" required></div>
+        </div>
+        <div class="row">
+          <div><label data-en="Phone" data-hi="फ़ोन" data-fr="Téléphone" data-de="Telefon" data-zh="电话" data-ru="Телефон" data-es="Teléfono">Teléfono</label><input type="tel" name="o1_phone" required></div>
+          <div><label>Email</label><input type="email" name="o1_email" required></div>
+        </div>
+        <label data-en="SSN <span class='req'>*</span>" data-hi="SSN <span class='req'>*</span>" data-fr="SSN <span class='req'>*</span>" data-de="SSN <span class='req'>*</span>" data-zh="SSN <span class='req'>*</span>" data-ru="SSN <span class='req'>*</span>" data-es="SSN <span class='req'>*</span>">SSN <span class="req">*</span></label>
+        <input type="text" name="o1_ssn" inputmode="numeric" pattern="\d{3}-?\d{2}-?\d{4}" maxlength="11" placeholder="123-45-6789" required>
+      </div>
+    </div>
+
+    <button type="button" class="mini-btn" id="addOwnerBtn">＋ <span data-en="Add another owner" data-hi="एक और मालिक जोड़ें" data-fr="Ajouter un autre propriétaire" data-de="Weiteren Eigentümer hinzufügen" data-zh="添加另一位业主" data-ru="Добавить владельца" data-es="Agregar otro propietario">Agregar otro propietario</span></button>
+    <p class="note" data-en="Maximum 4 owners. Ownership percentages should add up to 100%." data-hi="अधिकतम 4 मालिक। स्वामित्व प्रतिशत का योग 100% होना चाहिए।" data-fr="Maximum 4 propriétaires. Les pourcentages doivent totaliser 100 %." data-de="Maximal 4 Eigentümer. Die Prozentsätze sollten zusammen 100 % ergeben." data-zh="最多4位业主。所有权百分比之和应为100%。" data-ru="Максимум 4 владельца. Доли должны в сумме давать 100%." data-es="Máximo 4 propietarios. Los porcentajes deben sumar 100%.">Máximo 4 propietarios. Los porcentajes deben sumar 100%.</p>
+
+    <template id="ownerTemplate">
+      <div class="owner-block">
+        <label style="margin-top:6px;">
+          <span data-en="Owner" data-hi="मालिक" data-fr="Propriétaire" data-de="Eigentümer" data-zh="业主" data-ru="Владелец" data-es="Propietario">Propietario</span> <span class="ownerNum"></span>
+          <button type="button" class="removeOwner" data-en="Remove" data-hi="हटाएँ" data-fr="Supprimer" data-de="Entfernen" data-zh="移除" data-ru="Удалить" data-es="Eliminar">Eliminar</button>
+        </label>
+        <div class="row">
+          <div><label data-en="Full name" data-hi="पूरा नाम" data-fr="Nom complet" data-de="Vollständiger Name" data-zh="全名" data-ru="Имя полностью" data-es="Nombre completo">Nombre completo</label><input type="text" class="o-name" required></div>
+          <div><label data-en="Ownership %" data-hi="स्वामित्व %" data-fr="% de propriété" data-de="Eigentumsanteil %" data-zh="所有权 %" data-ru="Доля %" data-es="% de propiedad">% de propiedad</label><input type="number" class="o-pct" min="1" max="100" required></div>
+        </div>
+        <div class="row">
+          <div><label data-en="Phone" data-hi="फ़ोन" data-fr="Téléphone" data-de="Telefon" data-zh="电话" data-ru="Телефон" data-es="Teléfono">Teléfono</label><input type="tel" class="o-phone" required></div>
+          <div><label>Email</label><input type="email" class="o-email" required></div>
+        </div>
+        <label data-en="SSN <span class='req'>*</span>" data-hi="SSN <span class='req'>*</span>" data-fr="SSN <span class='req'>*</span>" data-de="SSN <span class='req'>*</span>" data-zh="SSN <span class='req'>*</span>" data-ru="SSN <span class='req'>*</span>" data-es="SSN <span class='req'>*</span>">SSN <span class="req">*</span></label>
+        <input type="text" class="o-ssn" inputmode="numeric" pattern="\d{3}-?\d{2}-?\d{4}" maxlength="11" placeholder="123-45-6789" required>
+      </div>
+    </template>
+  </section>
+
+  <!-- SECTION 5: DOCUMENTS -->
+  <section>
+    <h2 data-en="Documents" data-hi="दस्तावेज़" data-fr="Documents" data-de="Unterlagen" data-zh="文件" data-ru="Документы" data-es="Documentos">Documentos</h2>
+    <label data-en="Bank statements <span class='req'>*</span>" data-hi="बैंक स्टेटमेंट <span class='req'>*</span>" data-fr="Relevés bancaires <span class='req'>*</span>" data-de="Kontoauszüge <span class='req'>*</span>" data-zh="银行对账单 <span class='req'>*</span>" data-ru="Банковские выписки <span class='req'>*</span>" data-es="Estados de cuenta <span class='req'>*</span>">Estados de cuenta <span class="req">*</span></label>
+    <input type="file" name="attachment" multiple accept=".pdf,.jpg,.jpeg,.png,.csv,.ofx" required>
+    <p class="note" data-en="Last 3–6 months. PDF, JPG, PNG, CSV or OFX. You can also email statements to jeafyllc@gmail.com" data-hi="पिछले 3–6 महीने। PDF, JPG, PNG, CSV या OFX। आप स्टेटमेंट jeafyllc@gmail.com पर भी ईमेल कर सकते हैं" data-fr="Derniers 3–6 mois. PDF, JPG, PNG, CSV ou OFX. Vous pouvez aussi envoyer les relevés à jeafyllc@gmail.com" data-de="Letzte 3–6 Monate. PDF, JPG, PNG, CSV oder OFX. Sie können die Auszüge auch an jeafyllc@gmail.com senden" data-zh="最近3-6个月。PDF、JPG、PNG、CSV或OFX。您也可以将对账单发送至 jeafyllc@gmail.com" data-ru="Последние 3–6 месяцев. PDF, JPG, PNG, CSV или OFX. Также можно отправить выписки на jeafyllc@gmail.com" data-es="Últimos 3–6 meses. PDF, JPG, PNG, CSV u OFX. También puede enviar los estados a jeafyllc@gmail.com">Últimos 3–6 meses. PDF, JPG, PNG, CSV u OFX. También puede enviar los estados a <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a7cdc2c6c1decbcbc4e7c0cac6cecb89c4c8ca">[email&#160;protected]</a></p>
+  </section>
+
+  <!-- SECTION 6: AGREEMENT -->
+  <section>
+    <h2 data-en="Agreement" data-hi="समझौता" data-fr="Accord" data-de="Zustimmung" data-zh="协议" data-ru="Подтверждение" data-es="Acuerdo">Acuerdo</h2>
+    <label style="display:flex; align-items:flex-start; gap:10px; font-weight:600; color:#dcfce7;">
+      <input type="checkbox" name="agreement" required style="margin-top:3px;">
+      <span data-en="I certify that all information provided is complete and accurate. I authorize investigation of my credit and business history. <span class='req'>*</span>" data-hi="मैं प्रमाणित करता हूँ कि दी गई सभी जानकारी पूर्ण और सटीक है। मैं अपने क्रेडिट और व्यावसायिक इतिहास की जाँच की अनुमति देता हूँ। <span class='req'>*</span>" data-fr="Je certifie que toutes les informations fournies sont complètes et exactes. J'autorise l'examen de mon crédit et de mes antécédents professionnels. <span class='req'>*</span>" data-de="Ich versichere, dass alle Angaben vollständig und richtig sind. Ich genehmige die Überprüfung meiner Kredit- und Unternehmenshistorie. <span class='req'>*</span>" data-zh="我证明所提供的信息完整准确。我授权调查我的信用和商业历史。<span class='req'>*</span>"
+            data-ru="Я подтверждаю, что вся предоставленная информация является полной и достоверной. Я разрешаю проверку моей кредитной истории и сведений о бизнесе. <span class='req'>*</span>"
+            data-es="Certifico que toda la información proporcionada es completa y exacta. Autorizo la investigación de mi crédito e historial comercial. <span class='req'>*</span>">Certifico que toda la información proporcionada es completa y exacta. Autorizo la investigación de mi crédito e historial comercial. <span class="req">*</span></span>
+    </label>
+    <p class="note" style="margin-top:10px;">
+      <span data-en="Date:" data-hi="तिथि:" data-fr="Date :" data-de="Datum:" data-zh="日期：" data-ru="Дата:" data-es="Fecha:">Fecha:</span> <span id="todayDate"></span>
+    </p>
+  </section>
+
+  <button type="submit" class="submit" id="submitBtn" data-en="Submit Application" data-hi="आवेदन जमा करें" data-fr="Envoyer la demande" data-de="Antrag absenden" data-zh="提交申请" data-ru="Отправить заявку" data-es="Enviar solicitud">Enviar solicitud</button>
+
+</form>
+
+<div id="success" class="hidden"></div>
+
+<footer>Eli The Money Guy &middot; <span data-en="Your information is sent securely (HTTPS) and used only to evaluate this application." data-hi="आपकी जानकारी सुरक्षित रूप से (HTTPS) भेजी जाती है और केवल इस आवेदन का मूल्यांकन करने के लिए उपयोग की जाती है।" data-fr="Vos informations sont envoyées de manière sécurisée (HTTPS) et utilisées uniquement pour évaluer cette demande." data-de="Ihre Daten werden sicher übertragen (HTTPS) und nur zur Prüfung dieses Antrags verwendet." data-zh="您的信息通过加密连接（HTTPS）发送，仅用于评估本申请。" data-ru="Ваши данные передаются по защищённому соединению (HTTPS) и используются только для рассмотрения заявки." data-es="Su información se envía de forma segura (HTTPS) y se usa solo para evaluar esta solicitud.">Su información se envía de forma segura (HTTPS) y se usa solo para evaluar esta solicitud.</span></footer>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// --- CANVAS CURRENCY WALLPAPER ($, €, ₿, ₹, £, ₽, ¥) ---
+var cCanvas = document.getElementById('currencyCanvas');
+var ctx = cCanvas.getContext('2d');
+var symbols = ['$', '€', '₿', '₹', '£', '₽', '¥', '元'];
+var particles = [];
+
+function resizeCanvas() {
+  cCanvas.width = cCanvas.offsetWidth;
+  cCanvas.height = cCanvas.offsetHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+for (var p = 0; p < 35; p++) {
+  particles.push({
+    x: Math.random() * cCanvas.width,
+    y: Math.random() * cCanvas.height,
+    symbol: symbols[Math.floor(Math.random() * symbols.length)],
+    size: 14 + Math.random() * 22,
+    speedY: -0.3 - Math.random() * 0.7,
+    speedX: (Math.random() - 0.5) * 0.4,
+    opacity: 0.15 + Math.random() * 0.45,
+    rot: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.02
+  });
+}
+
+function drawWallpaper() {
+  ctx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+  for (var i = 0; i < particles.length; i++) {
+    var pt = particles[i];
+    pt.y += pt.speedY;
+    pt.x += pt.speedX;
+    pt.rot += pt.rotSpeed;
+
+    if (pt.y < -30) { pt.y = cCanvas.height + 20; pt.x = Math.random() * cCanvas.width; }
+    if (pt.x < -30) pt.x = cCanvas.width + 20;
+    if (pt.x > cCanvas.width + 30) pt.x = -20;
+
+    ctx.save();
+    ctx.translate(pt.x, pt.y);
+    ctx.rotate(pt.rot);
+    ctx.font = '700 ' + pt.size + 'px Poppins, sans-serif';
+    ctx.fillStyle = 'rgba(0, 255, 102, ' + pt.opacity + ')';
+    ctx.shadowColor = '#00ff66';
+    ctx.shadowBlur = 12;
+    ctx.fillText(pt.symbol, 0, 0);
+    ctx.restore();
+  }
+  requestAnimationFrame(drawWallpaper);
+}
+drawWallpaper();
+
+// --- NEON GREEN 3D HEADER: tilt physics, spotlight, extruded shadows ---
+var stage = document.getElementById('stage');
+var spotlight = document.getElementById('spotlight');
+var wrapper = document.getElementById('wrapper');
+var text3D = document.getElementById('text3D');
+
+var targetRotX = 0, targetRotY = 0;
+var currentRotX = 0, currentRotY = 0;
+var isHovered = false;
+
+var DEPTH = 16;
+var TILT = 1.3;
+var LAYER1 = '#4ade80';
+var LAYER2 = '#16a34a';
+var GLOW = 'rgba(0, 255, 102, 0.85)';
+
+function handleMove(px, py) {
+  var rect = stage.getBoundingClientRect();
+  var cx = rect.left + rect.width / 2;
+  var cy = rect.top + rect.height / 2;
+  var dx = (px - cx) / (rect.width / 2);
+  var dy = (py - cy) / (rect.height / 2);
+  targetRotX = -dy * 25 * TILT;
+  targetRotY = dx * 30 * TILT;
+  spotlight.style.setProperty('--light-x', (px - rect.left) + 'px');
+  spotlight.style.setProperty('--light-y', (py - rect.top) + 'px');
+}
+
+stage.addEventListener('mousemove', function(e) { isHovered = true; handleMove(e.clientX, e.clientY); });
+stage.addEventListener('mouseleave', function() { isHovered = false; targetRotX = 0; targetRotY = 0; });
+stage.addEventListener('touchmove', function(e) {
+  if (e.touches.length > 0) { isHovered = true; handleMove(e.touches[0].clientX, e.touches[0].clientY); }
+}, { passive: true });
+stage.addEventListener('touchend', function() { isHovered = false; targetRotX = 0; targetRotY = 0; });
+
+function renderHeader() {
+  currentRotX += (targetRotX - currentRotX) * 0.08;
+  currentRotY += (targetRotY - currentRotY) * 0.08;
+
+  var finalRotX = currentRotX, finalRotY = currentRotY;
+  if (!isHovered) {
+    var t = Date.now() * 0.002;
+    finalRotX += Math.sin(t) * 8;
+    finalRotY += Math.cos(t * 0.8) * 12;
+  }
+
+  wrapper.style.transform = 'rotateX(' + finalRotX + 'deg) rotateY(' + finalRotY + 'deg) translateZ(20px)';
+
+  var offX = -finalRotY * 0.45;
+  var offY = finalRotX * 0.45 + 2;
+  var shadowStr = '';
+  for (var i = 1; i <= DEPTH; i++) {
+    var ratio = i / DEPTH;
+    var sx = (offX * ratio).toFixed(1);
+    var sy = (i + offY * ratio).toFixed(1);
+    var col = ratio < 0.5 ? LAYER1 : LAYER2;
+    shadowStr += sx + 'px ' + sy + 'px 0 ' + col + ', ';
+  }
+  shadowStr += (offX * 1.5).toFixed(1) + 'px ' + (DEPTH + offY * 1.5).toFixed(1) + 'px 32px ' + GLOW;
+  text3D.style.textShadow = shadowStr;
+
+  requestAnimationFrame(renderHeader);
+}
+renderHeader();
+
+// --- MULTI-OWNER LOGIC ---
+var ownerCount = 1;
+var addOwnerBtn = document.getElementById('addOwnerBtn');
+var ownersContainer = document.getElementById('ownersContainer');
+var ownerTemplate = document.getElementById('ownerTemplate');
+
+function refreshOwnerUI(){
+  var blocks = ownersContainer.querySelectorAll('.owner-block');
+  blocks.forEach(function(b, i){
+    b.querySelector('.ownerNum').textContent = (i + 1);
+  });
+  if (blocks.length >= 4) { addOwnerBtn.disabled = true; } else { addOwnerBtn.disabled = false; }
+}
+
+addOwnerBtn.addEventListener('click', function(){
+  if (ownerCount >= 4) return;
+  ownerCount++;
+  var clone = ownerTemplate.content.cloneNode(true);
+  clone.querySelector('.o-name').name = 'o' + ownerCount + '_name';
+  clone.querySelector('.o-pct').name = 'o' + ownerCount + '_pct';
+  clone.querySelector('.o-phone').name = 'o' + ownerCount + '_phone';
+  clone.querySelector('.o-email').name = 'o' + ownerCount + '_email';
+  clone.querySelector('.o-ssn').name = 'o' + ownerCount + '_ssn';
+  clone.querySelector('.removeOwner').addEventListener('click', function(){
+    this.closest('.owner-block').remove();
+    refreshOwnerUI();
+  });
+  ownersContainer.appendChild(clone);
+  refreshOwnerUI();
+});
+
+// --- APPLICATION FORM LOGIC ---
+document.getElementById('todayDate').textContent = new Date().toLocaleDateString();
+
+function setLang(lang){
+  localStorage.setItem('lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-' + lang + ']').forEach(function(el){
+    el.innerHTML = el.getAttribute('data-' + lang);
+  });
+  ['en','es','ru','fr','de','zh','hi'].forEach(function(l){
+    document.getElementById('btn-' + l).classList.toggle('active', l === lang);
+  });
+  showSuccess(false);
+}
+var savedLang = localStorage.getItem('lang') || 'en';
+setLang(savedLang);
+
+var SUCCESS = {
+  es: "¡Solicitud enviada! Nos pondremos en contacto con usted pronto.",
+  ru: "Заявка отправлена! Мы свяжемся с вами в ближайшее время.",
+  en: "Application submitted! We will contact you shortly.",
+  hi: "आवेदन जमा हो गया! हम जल्द ही आपसे संपर्क करेंगे।",
+  fr: "Demande envoyée ! Nous vous contacterons bientôt.",
+  de: "Antrag gesendet! Wir werden uns in Kürze bei Ihnen melden.",
+  zh: "申请已提交！我们会尽快与您联系。"
+};
+var SENDING = { en: "Sending...", es: "Enviando...", ru: "Отправка...", hi: "भेजा जा रहा है...", fr: "Envoi en cours...", de: "Wird gesendet...", zh: "发送中..." };
+var ERROR = {
+  es: "Algo salió mal. Intente de nuevo o llámenos.",
+  ru: "Что-то пошло не так. Попробуйте ещё раз или позвоните нам.",
+  en: "Something went wrong. Please try again or call us.",
+  hi: "कुछ गलत हुआ। कृपया पुनः प्रयास करें या हमें कॉल करें।",
+  fr: "Une erreur s'est produite. Veuillez réessayer ou nous appeler.",
+  de: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut oder rufen Sie uns an.",
+  zh: "出现问题。请重试或致电我们。"
+};
+
+function showSuccess(ok, isError){
+  var box = document.getElementById('success');
+  if(!ok){ box.classList.add('hidden'); return; }
+  var lang = localStorage.getItem('lang') || 'en';
+  box.textContent = isError ? ERROR[lang] : SUCCESS[lang];
+  box.style.background = isError ? '#450a0a' : 'linear-gradient(135deg, #00ff66, #16a34a)';
+  box.style.borderColor = isError ? '#ef4444' : '#00ff66';
+  box.style.color = isError ? '#fecaca' : '#011408';
+  box.classList.remove('hidden');
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+document.getElementById('appForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  if(!this.reportValidity()) return;
+  var btn = document.getElementById('submitBtn');
+  var lang = localStorage.getItem('lang') || 'en';
+  btn.disabled = true;
+  var originalText = btn.textContent;
+  btn.textContent = SENDING[lang];
+
+  var data = new FormData(this);
+  data.append('replyto', this.email.value);
+
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    body: data
+  }).then(function(res){ return res.json(); }).then(function(json){
+    btn.disabled = false;
+    btn.textContent = originalText;
+    if(json.success){
+      showSuccess(true, false);
+      var ownerBlocks = ownersContainer.querySelectorAll('.owner-block');
+      for (var i = ownerBlocks.length - 1; i > 0; i--) { ownerBlocks[i].remove(); }
+      ownerCount = 1;
+      refreshOwnerUI();
+      document.getElementById('appForm').reset();
+    } else {
+      showSuccess(true, true);
+    }
+  }).catch(function(){
+    btn.disabled = false;
+    btn.textContent = originalText;
+    showSuccess(true, true);
+  });
+});
+</script>
+</body>
+</html>
